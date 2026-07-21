@@ -8,17 +8,19 @@ from typing import Any
 class UserBase(BaseModel):
     name: str
     email: EmailStr
-    role: str = "user"
+    role: str = "student"  # student, alumni, admin
 
 class UserCreate(UserBase):
     password: str | None = None
 
 class UserRead(UserBase):
     id: int
+    is_verified: bool = False
     created_at: datetime
     updated_at: datetime
     
     model_config = ConfigDict(from_attributes=True)
+
 
 # ----------------------------------------------------
 # ACADEMIC MILESTONE SCHEMAS
@@ -181,4 +183,33 @@ class MediaRoutingResult(BaseModel):
     target_tiers: list[str]
     channels: list[str]
     generated_at: str
+
+# ----------------------------------------------------
+# AUTHENTICATION SCHEMAS
+# ----------------------------------------------------
+class UserRegisterRequest(BaseModel):
+    name: str
+    email: EmailStr
+    password: str
+    role: str = "student"  # student, alumni, admin
+
+class UserLoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserRead
+
+class UserProfile(BaseModel):
+    id: int
+    name: str
+    email: str
+    role: str
+    is_verified: bool
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
 

@@ -10,6 +10,7 @@ from backend.app.routers import (
     social_impact,
     personal,
     admin,
+    auth,
 )
 
 @asynccontextmanager
@@ -45,12 +46,14 @@ app.add_middleware(
 )
 
 # Register Routers
+app.include_router(auth.router, prefix=settings.API_V1_STR)
 app.include_router(academic.router, prefix=settings.API_V1_STR)
 app.include_router(professional.router, prefix=settings.API_V1_STR)
 app.include_router(entrepreneurial.router, prefix=settings.API_V1_STR)
 app.include_router(social_impact.router, prefix=settings.API_V1_STR)
 app.include_router(personal.router, prefix=settings.API_V1_STR)
 app.include_router(admin.router, prefix=settings.API_V1_STR)
+
 
 @app.get("/health", tags=["Health"])
 async def health_check():

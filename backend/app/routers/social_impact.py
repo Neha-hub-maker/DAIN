@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from backend.app.core.database import get_db
+from backend.app.core.dependencies import get_current_active_verified_user
+from backend.app.models.models import User
 from backend.app.schemas.schemas import SocialImpactMilestoneCreate, SocialImpactMilestoneRead
 from backend.app.services import crud
 
@@ -18,9 +20,10 @@ async def read_social_impact_milestones(db: AsyncSession = Depends(get_db)):
 @router.post("/", response_model=SocialImpactMilestoneRead, status_code=201)
 async def add_social_impact_milestone(
     milestone: SocialImpactMilestoneCreate,
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_active_verified_user)
 ):
     """
-    Create a new social impact milestone (volunteer role, community scaling initiative).
+    Create a new social impact milestone. Protected: Requires DUNITE verified user authentication.
     """
-    return await crud.create_social_impact_milestone(db, milestone, user_id=DEFAULT_USER_ID)
+    return await crud.create_social_impact_milestone(db, milestone, user_id=current_user.id)

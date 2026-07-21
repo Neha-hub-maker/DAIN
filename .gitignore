@@ -1,4 +1,11 @@
+# Dependencies & Builds
 .next
 node_modules/
 *.log
 .env
+
+# Python & Cache
+__pycache__/
+*.pyc
+.local_cache/
+*.sqlite3-journal
